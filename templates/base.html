@@ -30,38 +30,41 @@
     </a>
     <ul class="dropdown-menu" aria-labelledby="userDropdown">
         <li>
-            <form method="POST" action="{{ url_for('show_details', productID=0) }}">  <!-- Adjust 'productID=0' or any valid ID -->
+            <form method="POST" action="{{ url_for('homepage') }}">
                 <button class="dropdown-item" type="submit">Logout</button>
             </form>
+
         </li>
     </ul>
 </li>
  {% else %}
 <!-- Login Button (Visible if user is Guest) -->
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-                            </li>
+            <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+            </li>
 {% endif %}
 
-                        <li class="nav-item"><a class="nav-link {% if active_page == 'home' %}active{% endif %}" href="{{ url_for('homepage') }}">Home</a></li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="{{ url_for('homepage') }}">All Products</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="{{ url_for('homepage') }}">Popular Items</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('homepage') }}">New Arrivals</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <form class="d-flex">
-                        <button class="btn btn-outline-dark" type="submit">
-                            <i class="bi-cart-fill me-1"></i>
-                            Cart
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                        </button>
-                    </form>
-                </div>
+            <li class="nav-item"><a class="nav-link {% if active_page == 'home' %}active{% endif %}" href="{{ url_for('homepage') }}">Home</a></li>
+            <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Shop</a>
+            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="{{ url_for('homepage') }}">All Products</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li><a class="dropdown-item" href="{{ url_for('homepage') }}">Posters</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('homepage') }}">Figurines</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('homepage') }}">Replicas</a></li>
+
+            </ul>
+            </li>
+            </ul>
+            <form class="d-flex">
+            <button class="btn btn-outline-dark" type="submit">
+            <i class="bi-cart-fill me-1"></i>
+            Cart
+            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+            </button>
+            </form>
+            </div>
             </div>
         </nav>
 

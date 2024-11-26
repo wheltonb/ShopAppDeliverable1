@@ -41,9 +41,13 @@ def show_details(productID):
     return render_template('product_details.html', products=products)
 
 
-@app.route('/login/')
-def login():  # put application's code here
-    return "test"
+@app.route('/login/', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        # extract email and password entry from form data
+        email = request.form.get('emailField')
+        password = request.form.get('passwordField')
+    return render_template('login.html')
 
 
 if __name__ == '__main__':
