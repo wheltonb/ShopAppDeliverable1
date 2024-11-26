@@ -1,30 +1,50 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for, session
 from dao.productDAO import productDAO
 
 app = Flask(__name__)
+
+# Set a secret key for session management
+app.secret_key = 'ProjectSecretKey'
 productDAO = productDAO()
-session_user = "Guest"
 
 
+@app.route('/', methods=['GET', 'POST'])
+def homepage():  # index/product list page
+    if 'session_user' not in session:
+        session['session_user'] = 'Guest' # setting the default value of the user session
 
-@app.route('/')
-def show_products(): # index/product list page
+    # if block defining actions taken on post method from HTML
+    if request.method == 'POST':
+        # If logout button is clicked, reset the session_user to 'Guest'
+
+        if 'logout' in request.form: # checks the post method to see if it is the logout button being pushed
+            session['session_user'] = 'Guest'  # Reset session_user to "Guest"
+            return redirect(url_for('homepage'))  # Redirect to the homepage with the reset session
+
     products = productDAO.getAllProducts()
     return render_template('index.html', products=products)
 
-@app.route('/product/<int:productID>')
-def show_details(productID):  # put application's code here
+
+@app.route('/product/<int:productID>', methods=['GET', 'POST'])
+def show_details(productID):
+    # if block defining actions taken on post method from HTML
+    if request.method == 'POST':
+        if 'logout' in request.form:
+            session['session_user'] = 'Guest'
+            return redirect(url_for('homepage'))
+
+        if 'add_to_cart' in request.form:
+            return "test"
+
+    # If it's a GET request, show the product details
     products = productDAO.getProductById(productID)
-    return render_template('', products=products)
+    return render_template('product_details.html', products=products)
 
 
 @app.route('/login/')
-def show_details(productID):  # put application's code here
-    products = productDAO.getProductById(productID)
-    return render_template('', products=products)
-
+def login():  # put application's code here
+    return "test"
 
 
 if __name__ == '__main__':
     app.run()
-
