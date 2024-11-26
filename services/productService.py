@@ -1,4 +1,4 @@
-class ProductService:
+"""class ProductService:
     def __init__(self, dao):
         self.dao = dao
 
@@ -7,3 +7,5 @@ class ProductService:
 
     def get_product_by_id(self, product_id):
         return self.dao.getProductById(product_id)
+
+"""

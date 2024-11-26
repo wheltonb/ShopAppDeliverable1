@@ -1,3 +1,5 @@
+import re
+from dao import userDAO
 
 class UserValidation:
     def __init__(self):
@@ -24,3 +26,4 @@ class UserValidation:
             print("Password must contain at least one special character")
             return False
         return True
+

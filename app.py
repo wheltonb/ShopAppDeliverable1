@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from dao.productDAO import productDAO
+from services import userService
 
 app = Flask(__name__)
 
