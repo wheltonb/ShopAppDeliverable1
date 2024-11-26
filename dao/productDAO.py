@@ -13,9 +13,6 @@ class productDAO:
 
 
 
-
-
-
     def getAllProducts(self):
         return self.products
 

@@ -3,6 +3,8 @@ from dao.productDAO import productDAO
 
 app = Flask(__name__)
 productDAO = productDAO()
+session_user = "Guest"
+
 
 
 @app.route('/')
@@ -14,6 +16,14 @@ def show_products(): # index/product list page
 def show_details(productID):  # put application's code here
     products = productDAO.getProductById(productID)
     return render_template('', products=products)
+
+
+@app.route('/login/')
+def show_details(productID):  # put application's code here
+    products = productDAO.getProductById(productID)
+    return render_template('', products=products)
+
+
 
 if __name__ == '__main__':
     app.run()
