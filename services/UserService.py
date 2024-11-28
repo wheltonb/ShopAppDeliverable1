@@ -3,8 +3,27 @@ from validation import userValidation
 from models import User
 # Creating a service layer for the model class this will handle business logic related to model
 # this is an example of MVC (Model View Controller) Good programming practice for website development
-class UserService:
 
+from dao.userDAO import UserDAO
+from models.User import User
+
+
+class UserService:
+    def __init__(self):
+        self.userDAO = UserDAO()
+        self.users = self.userDAO.getAllUsers()
+
+    def verifyUser(self, email, password):
+        # Fetch user by email
+        for user in self.users:
+            if user.userEmail == email and user.userPassword == password:
+                return user
+        return None
+
+
+
+
+"""
     def __init__(self, userValidation):
         # Create an instance of UserDAO to handle model data
         self.userDAO = userDAO([])  # Passing an empty list to UserDAO constructor
@@ -54,4 +73,4 @@ class UserService:
             print("Sign up failed. Please try again.")
             self.signUp()  # Recursive call if validation fails
 
-
+"""

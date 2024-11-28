@@ -29,16 +29,16 @@
     <ul class="dropdown-menu" aria-labelledby="userDropdown">
         <li>
             <form method="POST" action="{{ url_for('homepage') }}">
+
                 <button class="dropdown-item" type="submit">Logout</button>
             </form>
-
         </li>
     </ul>
 </li>
  {% else %}
 <!-- Login Button (Visible if user is Guest) -->
             <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+            <a class="nav-link" href="{{ url_for('login.html') }}">Login</a>
             </li>
 {% endif %}
 

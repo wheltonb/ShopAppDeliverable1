@@ -19,6 +19,9 @@ class UserDAO:
 
         return self.user_list
 
+    def getUserByEmail(self, email):
+        for user in self.user_list:
+            if user.userEmail == email:
+                return user
+        return None
     # Add a new model to the list
-    def createUser(self, user):
-        self.user_list.append(user)
