@@ -12,15 +12,17 @@ userService = UserService()
 
 @app.route('/', methods=['GET', 'POST'])
 def homepage():  # index/product list page
+
     if 'session_user' not in session:
         session['session_user'] = 'Guest' # setting the default value of the user session
 
-    # if block defining actions taken on post method from HTML
     if request.method == 'POST':
         # If logout button is clicked, reset the session_user to 'Guest'
         if 'logout' in request.form:    # checks the post method to see if it is the logout button being pushed
             session['session_user'] = 'Guest'  # Reset session_user to "Guest"
+            print("User logged out, session reset.")  # Debugging message
             return redirect(url_for('homepage'))  # Redirect to the homepage with the reset session
+
     session.setdefault('cart', [])
     products = productDAO.getAllProducts()
     cart = session.get('cart', [])

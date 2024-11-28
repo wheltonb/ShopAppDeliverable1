@@ -24,13 +24,12 @@
 <!-- User Dropdown -->
 <li class="nav-item dropdown">
     <a class="nav-link dropdown-toggle" id="userDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-        {{ session_user }}
-    </a>
+{{ session['session_user'] }}    </a>
     <ul class="dropdown-menu" aria-labelledby="userDropdown">
         <li>
             <form method="POST" action="{{ url_for('homepage') }}">
 
-                <button class="dropdown-item" type="submit">Logout</button>
+                <button class="dropdown-item" type="submit" name="logout" >Logout</button>
             </form>
         </li>
     </ul>
@@ -38,7 +37,7 @@
  {% else %}
 <!-- Login Button (Visible if user is Guest) -->
             <li class="nav-item">
-            <a class="nav-link" href="{{ url_for('login.html') }}">Login</a>
+            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
             </li>
 {% endif %}
 
