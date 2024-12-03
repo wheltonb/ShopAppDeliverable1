@@ -20,9 +20,9 @@ def homepage():  # index/product list page
         # If logout button is clicked, reset the session_user to 'Guest'
         if 'logout' in request.form:    # checks the post method to see if it is the logout button being pushed
             session['session_user'] = 'Guest'  # Reset session_user to "Guest"
-            print("User logged out, session reset.")  # Debugging message
             return redirect(url_for('homepage'))  # Redirect to the homepage with the reset session
-
+    if session['session_user'] == 'Admin':
+        return redirect(url_for('admin_page'))
     session.setdefault('cart', [])
     products = productDAO.getAllProducts()
     cart = session.get('cart', [])
@@ -31,11 +31,11 @@ def homepage():  # index/product list page
 
 @app.route('/product/<int:productID>', methods=['GET', 'POST'])
 def show_details(productID):
-    # if block defining actions taken on post method from HTML
+    # reusing logout logic
     if request.method == 'POST':
         if 'logout' in request.form:
             session['session_user'] = 'Guest'
-            return redirect(url_for('homepage'))
+            return 'Test'
 
         if 'add_to_cart' in request.form:
             return "test"
@@ -60,7 +60,7 @@ def login():
             if userToLogin.isManager:
                 session['session_user'] = "Admin"
                 session['user_email'] = userToLogin.userEmail
-                return render_template("index.html", products=products)
+                return render_template("admin.html")
 
             else:
                 session['session_user'] = "User"
@@ -69,14 +69,19 @@ def login():
 
         else:
             return render_template("login.html", errorMessage="Incorrect email or password")
-
+    session['session_user'] = "Guest"
     return render_template("login.html")
 
 
+@app.route('/admin', methods=['GET', 'POST'])
+def admin_page():
+    if request.method == 'POST':
+        # reusing logout logic from previous pages
+        if 'logout' in request.form:
+            session['session_user'] = 'Guest'
+            return redirect(url_for('homepage'))
 
-
-
-    return render_template('login.html')
+    return render_template('admin.html')
 
 
 if __name__ == '__main__':
