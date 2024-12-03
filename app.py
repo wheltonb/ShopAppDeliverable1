@@ -26,7 +26,8 @@ def homepage():  # index/product list page
     session.setdefault('cart', [])
     products = productDAO.getAllProducts()
     cart = session.get('cart', [])
-    return render_template('index.html', products=products)
+    cart_len = len(cart)
+    return render_template('index.html', products=products, cart_len=cart_len)
 
 
 @app.route('/product/<int:productID>', methods=['GET', 'POST'])
