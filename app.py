@@ -1,32 +1,35 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from dao.productDAO import productDAO
 from services.UserService import UserService
-
+# imports are needed to drag elements of the project from custom DAO and Service modules as well as access pre-built flask libraries
 app = Flask(__name__)
 
-# Set a secret key for session management
+# secret key lets me create sessions to manage app-state
 app.secret_key = 'ProjectSecretKey'
+
 productDAO = productDAO()
 userService = UserService()
+# initializing an instance of productDAO and UserService allows app to access the functions stored in those classes
 
-
+# home route to serve as site homepage and allow for product viewing or login
 @app.route('/', methods=['GET', 'POST'])
-def homepage():  # index/product list page
+def homepage():
+    if 'session_user' not in session: # used to check for and create a session user so app can track sign-in state and user type
+        session['session_user'] = 'Guest' # defaults user state to guest
 
-    if 'session_user' not in session:
-        session['session_user'] = 'Guest' # setting the default value of the user session
+    if request.method == 'POST': # checks any POST methods for if its a logout and reloads the page with session_user as Guest
+        if 'logout' in request.form:
+            session['session_user'] = 'Guest'
+            return redirect(url_for('homepage'))
 
-    if request.method == 'POST':
-        # If logout button is clicked, reset the session_user to 'Guest'
-        if 'logout' in request.form:    # checks the post method to see if it is the logout button being pushed
-            session['session_user'] = 'Guest'  # Reset session_user to "Guest"
-            return redirect(url_for('homepage'))  # Redirect to the homepage with the reset session
-    if session['session_user'] == 'Admin':
+    if session['session_user'] == 'Admin': # checks for session_user type Admin and redirects to dashboard
         return redirect(url_for('admin_page'))
+
+    # if page renders as GET creates an empty cart and renders all products for display
     session.setdefault('cart', [])
-    products = productDAO.getAllProducts()
+    products = productDAO.getAllProducts() # accesses ProductDAO to grab all instances of the Product class
     cart = session.get('cart', [])
-    cart_len = len(cart)
+    cart_len = len(cart) # length check of cart object for basket icon count
     return render_template('index.html', products=products, cart_len=cart_len)
 
 
@@ -41,43 +44,43 @@ def show_details(productID):
         if 'add_to_cart' in request.form:
             return "test"
 
-    # If it's a GET request, show the product details
     products = productDAO.getProductById(productID)
     return render_template('product_details.html', products=products)
 
 
+# login route to handle HTML form data and alter the User session
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # conditional check to allow page to handle  login-form POST
     if request.method == 'POST':
-        # take email and password from the login form
+        # assigns email and password from form entry to variable for authentication
         email = request.form.get('emailField')
         password = request.form.get('passwordField')
 
-        userToLogin = userService.verifyUser(email, password)
+        userToLogin = userService.verifyUser(email, password) # uses the form submissions as arguements in User Service authentication function
 
         if userToLogin:
-            products = productDAO.getAllProducts()
+            products = productDAO.getAllProducts()  # returns product list to pass to index for rendering on successful login
 
-            if userToLogin.isManager:
-                session['session_user'] = "Admin"
+            if userToLogin.isManager: # checks logged in User against objects isManager status and sets session accordingly to ensure redirect to admin dashboard
+                session['session_user'] = "Admin" # changes session state to reflect user type
                 session['user_email'] = userToLogin.userEmail
                 return render_template("admin.html")
 
-            else:
-                session['session_user'] = "User"
+            else: # states that if login successful and isAdmin = False session_user is set to User and returns to homepage as logged in ( used in base.html to generate conditional logout button)
+                session['session_user'] = "User" # changes session state to reflect user type
                 session['user_email'] = userToLogin.userEmail
-                return render_template("index.html", products=products)
+                return render_template("index.html", products=products) # passes product to index to allow product spread to render
 
-        else:
+        else: # on login failure re-render the login page
             return render_template("login.html", errorMessage="Incorrect email or password")
-    session['session_user'] = "Guest"
     return render_template("login.html")
 
-
+# admin route to interact with manager tools / display infographics
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_page():
+    # reuse of the logout conditional check and redirect on POST
     if request.method == 'POST':
-        # reusing logout logic from previous pages
         if 'logout' in request.form:
             session['session_user'] = 'Guest'
             return redirect(url_for('homepage'))
