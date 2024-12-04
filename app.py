@@ -11,6 +11,9 @@ productDAO = productDAO()
 userService = UserService()
 # initializing an instance of productDAO and UserService allows app to access the functions stored in those classes
 
+
+
+
 # home route to serve as site homepage and allow for product viewing or login
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
@@ -20,6 +23,7 @@ def homepage():
     if request.method == 'POST': # checks any POST methods for if its a logout and reloads the page with session_user as Guest
         if 'logout' in request.form:
             session['session_user'] = 'Guest'
+            session.modified = True
             return redirect(url_for('homepage'))
 
     if session['session_user'] == 'Admin': # checks for session_user type Admin and redirects to dashboard
@@ -33,24 +37,45 @@ def homepage():
     return render_template('index.html', products=products, cart_len=cart_len)
 
 
+
 @app.route('/product/<int:productID>', methods=['GET', 'POST'])
 def show_details(productID):
     # reusing logout logic
     if request.method == 'POST':
         if 'logout' in request.form:
             session['session_user'] = 'Guest'
+            session.modified = True
             return redirect(url_for('homepage'))
 
+
+        # conditional test to see if the POST request is adding to cart
         if 'add_to_cart' in request.form:
-            if session['session_user'] == 'Guest':
+            if session['session_user'] == 'Guest': # prevents guests from checking out
                 return redirect(url_for('login'))
-            else:
+            else: # conditional test where if users are signed in, retrieve data from page
+                productID = request.form['productID']
+                productName = request.form['productName']
+                price = request.form['price']
+                quantity = request.form['quantity']
+                cart = session['cart']
+                for item in cart: # needed to iterate through cart to ensure entries dont overwrite pre-existing cart item
+                    if item['productID'] == productID:
+                        item['quantity'] += quantity # increments quantity if already in cart
+                        break
+                else: # if item not in cart appends the product id, name, price and quantity as dictionary entries before redirecting to cart page
+                    cart.append({'productID':productID,
+                                'productName': productName,
+                                'price': price,
+                                'quantity': quantity
+                                })
+                session.modified = True
                 return redirect(url_for('show_cart'))
 
     products = productDAO.getProductById(productID)
     cart = session.get('cart', [])
     cart_len = len(cart)
     return render_template('product_details.html', products=products, cart_len=cart_len)
+
 
 
 # login route to handle HTML form data and alter the User session
@@ -69,20 +94,23 @@ def login():
 
             if userToLogin.isManager: # checks logged in User against objects isManager status and sets session accordingly to ensure redirect to admin dashboard
                 session['session_user'] = "Admin" # changes session state to reflect user type
-                session['user_email'] = userToLogin.userEmail
+                session.modified = True
                 return render_template("admin.html")
 
-            else: # states that if login successful and isAdmin = False session_user is set to User and returns to homepage as logged in ( used in base.html to generate conditional logout button)
-                session['session_user'] = "User" # changes session state to reflect user type
-                session['user_email'] = userToLogin.userEmail
+            else: # states that if login successful and isAdmin = False session_user is set to userEmail and returns to homepage as logged in ( used in base.html to generate conditional logout button)
+                session['session_user'] = userToLogin.userEmail # changes session state and sets user as
                 cart = session.get('cart', [])
                 cart_len = len(cart)
+                session.modified = True
                 return render_template("index.html", products=products, cart_len=cart_len) # passes product to index to allow product spread to render
 
         else: # on login failure re-render the login page
             return render_template("login.html", errorMessage="Incorrect email or password")
     session.pop('cart')
     return render_template("login.html")
+
+
+
 
 # admin route to interact with manager tools / display infographics
 @app.route('/admin', methods=['GET', 'POST'])
@@ -91,12 +119,26 @@ def admin_page():
     if request.method == 'POST':
         if 'logout' in request.form:
             session['session_user'] = 'Guest'
+            session.modified = True
             return redirect(url_for('homepage'))
 
     return render_template('admin.html')
 
+
+
 @app.route('/cart', methods=['GET', 'POST'])
 def show_cart():
-    return 'SHOW CART'
+    cart = session.get('cart', [])
+    print(cart)
+    return redirect(url_for('homepage'))
+
+
+
+
+
+
+
+
+
 if __name__ == '__main__':
     app.run()
