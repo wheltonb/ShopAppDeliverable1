@@ -42,7 +42,10 @@ def show_details(productID):
             return redirect(url_for('homepage'))
 
         if 'add_to_cart' in request.form:
-            return "test"
+            if session['session_user'] == 'Guest':
+                return redirect(url_for('login'))
+            else:
+                return redirect(url_for('show_cart'))
 
     products = productDAO.getProductById(productID)
     cart = session.get('cart', [])
