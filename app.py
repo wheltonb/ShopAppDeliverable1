@@ -45,7 +45,9 @@ def show_details(productID):
             return "test"
 
     products = productDAO.getProductById(productID)
-    return render_template('product_details.html', products=products)
+    cart = session.get('cart', [])
+    cart_len = len(cart)
+    return render_template('product_details.html', products=products, cart_len=cart_len)
 
 
 # login route to handle HTML form data and alter the User session
@@ -70,10 +72,13 @@ def login():
             else: # states that if login successful and isAdmin = False session_user is set to User and returns to homepage as logged in ( used in base.html to generate conditional logout button)
                 session['session_user'] = "User" # changes session state to reflect user type
                 session['user_email'] = userToLogin.userEmail
-                return render_template("index.html", products=products) # passes product to index to allow product spread to render
+                cart = session.get('cart', [])
+                cart_len = len(cart)
+                return render_template("index.html", products=products, cart_len=cart_len) # passes product to index to allow product spread to render
 
         else: # on login failure re-render the login page
             return render_template("login.html", errorMessage="Incorrect email or password")
+    session.pop('cart')
     return render_template("login.html")
 
 # admin route to interact with manager tools / display infographics
@@ -87,6 +92,8 @@ def admin_page():
 
     return render_template('admin.html')
 
-
+@app.route('/cart', methods=['GET', 'POST'])
+def show_cart():
+    return 'SHOW CART'
 if __name__ == '__main__':
     app.run()

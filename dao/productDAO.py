@@ -4,7 +4,7 @@ class productDAO:
     def __init__(self):
         self.products = [Product(productID=1, productName="Next Gen Phaser", price="80", type="replica", gender=None,
                                  movable=None, isMirror=None, character=None, hasColour=None, dimensions=None, material="aluminum",
-                                 scale="1/1", isLimited=True, description="Replica of the phaser blaster used on the set of Star Trek the Next Generation", image_url="static/images/NextGenPhaser.jpg"),
+                                 scale="1/1", isLimited=True, description="Replica of the phaser blaster used on the set of Star Trek the Next Generation", image_url="/static/images/NextGenPhaser.jpg"),
 
                          Product(productID=1, productName="Original Series Sulu Model", price="30", type="Figurine", gender=None,
                                  movable=None, isMirror=None, character=None, hasColour=None, dimensions=None,
