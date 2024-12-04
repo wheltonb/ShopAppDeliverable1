@@ -6,10 +6,10 @@ class productDAO:
                                  movable=None, isMirror=None, character=None, hasColour=None, dimensions=None, material="aluminum",
                                  scale="1/1", isLimited=True, description="Replica of the phaser blaster used on the set of Star Trek the Next Generation", image_url="/static/images/NextGenPhaser.jpg"),
 
-                         Product(productID=1, productName="Original Series Sulu Model", price="30", type="Figurine", gender=None,
+                         Product(productID=2, productName="Original Series Sulu Model", price="30", type="Figurine", gender=None,
                                  movable=None, isMirror=None, character=None, hasColour=None, dimensions=None,
                                  material=None, scale=None, isLimited=None,
-                                 description="1/6 scale figurine of Lt.Sulu from Star Trek the original series", image_url="static/images/OriginalSeriesSuluFigurine.jpg")]
+                                 description="1/6 scale figurine of Lt.Sulu from Star Trek the original series", image_url="/static/images/OriginalSeriesSuluFigurine.jpg")]
 
 
 

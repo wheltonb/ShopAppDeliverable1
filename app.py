@@ -13,7 +13,6 @@ userService = UserService()
 
 
 
-
 # home route to serve as site homepage and allow for product viewing or login
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
@@ -22,8 +21,9 @@ def homepage():
 
     if request.method == 'POST': # checks any POST methods for if its a logout and reloads the page with session_user as Guest
         if 'logout' in request.form:
+            session.pop('cart')
             session['session_user'] = 'Guest'
-            session.modified = True
+            session.modified = True# probably the single most instrumental line, is reused multiple times in code to save any changes made to sessions to ensure that data persists (was used in add_product func to ensure append was saved and carried over to checkout
             return redirect(url_for('homepage'))
 
     if session['session_user'] == 'Admin': # checks for session_user type Admin and redirects to dashboard
@@ -43,6 +43,7 @@ def show_details(productID):
     # reusing logout logic
     if request.method == 'POST':
         if 'logout' in request.form:
+            session.pop('cart')
             session['session_user'] = 'Guest'
             session.modified = True
             return redirect(url_for('homepage'))
@@ -106,7 +107,6 @@ def login():
 
         else: # on login failure re-render the login page
             return render_template("login.html", errorMessage="Incorrect email or password")
-    session.pop('cart')
     return render_template("login.html")
 
 
@@ -118,6 +118,7 @@ def admin_page():
     # reuse of the logout conditional check and redirect on POST
     if request.method == 'POST':
         if 'logout' in request.form:
+            session.pop('cart')
             session['session_user'] = 'Guest'
             session.modified = True
             return redirect(url_for('homepage'))
