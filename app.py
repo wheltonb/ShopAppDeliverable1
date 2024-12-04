@@ -39,7 +39,7 @@ def show_details(productID):
     if request.method == 'POST':
         if 'logout' in request.form:
             session['session_user'] = 'Guest'
-            return 'Test'
+            return redirect(url_for('homepage'))
 
         if 'add_to_cart' in request.form:
             return "test"
