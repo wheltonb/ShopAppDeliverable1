@@ -108,17 +108,18 @@ def login():
             if userToLogin.isManager: # checks logged in User against objects isManager status and sets session accordingly to ensure redirect to admin dashboard
                 session['session_user'] = "Admin" # changes session state to reflect user type
                 session.modified = True
-                return render_template("admin.html")
+                return redirect(url_for("admin_page"))
 
             else: # states that if login successful and isAdmin = False session_user is set to userEmail and returns to homepage as logged in ( used in base.html to generate conditional logout button)
                 session['session_user'] = userToLogin.userEmail # changes session state and sets user as
                 cart = session.get('cart', [])
                 cart_len = len(cart)
                 session.modified = True
-                return render_template("index.html", products=products, cart_len=cart_len) # passes product to index to allow product spread to render
+                return redirect(url_for("homepage")) # passes product to index to allow product spread to render
 
         else: # on login failure re-render the login page
-            return render_template("login.html", errorMessage="Incorrect email or password")
+            return render_template("login.html")
+
     return render_template("login.html")
 
 
