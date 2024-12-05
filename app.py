@@ -26,8 +26,15 @@ def homepage():
             session.modified = True# probably the single most instrumental line, is reused multiple times in code to save any changes made to sessions to ensure that data persists (was used in add_product func to ensure append was saved and carried over to checkout
             return redirect(url_for('homepage'))
 
+        if 'show_cart' in request.form:
+            if session['session_user'] == 'Guest':
+                return redirect(url_for('login'))
+            else:
+                return redirect(url_for('show_cart'))
+
     if session['session_user'] == 'Admin': # checks for session_user type Admin and redirects to dashboard
         return redirect(url_for('admin_page'))
+
 
     # if page renders as GET creates an empty cart and renders all products for display
     session.setdefault('cart', [])
@@ -48,6 +55,11 @@ def show_details(productID):
             session.modified = True
             return redirect(url_for('homepage'))
 
+        if 'show_cart' in request.form:
+            if session['session_user'] == 'Guest':
+                return redirect(url_for('login'))
+            else:
+                return redirect(url_for('show_cart'))
 
         # conditional test to see if the POST request is adding to cart
         if 'add_to_cart' in request.form:
@@ -70,7 +82,7 @@ def show_details(productID):
                                 'quantity': quantity
                                 })
                 session.modified = True
-                return redirect(url_for('show_cart'))
+                return redirect(url_for('homepage'))
 
     products = productDAO.getProductById(productID)
     cart = session.get('cart', [])
@@ -130,8 +142,7 @@ def admin_page():
 @app.route('/cart', methods=['GET', 'POST'])
 def show_cart():
     cart = session.get('cart', [])
-    print(cart)
-    return redirect(url_for('homepage'))
+    return render_template('cart.html', cart=cart)
 
 
 
