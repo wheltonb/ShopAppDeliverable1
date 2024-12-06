@@ -7,7 +7,7 @@ class User:
         self.lastName = lastName
         self.userEmail = userEmail
         self.userPassword = userPassword
-
+        # conditional statement for setting admin role
         if isManager is not None:
             self.isManager = isManager
         else:

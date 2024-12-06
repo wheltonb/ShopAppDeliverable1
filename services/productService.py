@@ -9,3 +9,5 @@
         return self.dao.getProductById(product_id)
 
 """
+# Originally planned service layer for integrating and operating on productDAO but ran into issues so discounted this
+# module

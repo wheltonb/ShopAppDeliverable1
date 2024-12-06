@@ -1,6 +1,8 @@
 from models.Product import Product
 
 class productDAO:
+    # hard-coded products (1 of each type with 3 distinct attributes each)
+    # each product is only initialized with attributes for its own product type, all others = None
     def __init__(self):
         self.products = [Product(productID=1, productName="Next Gen Phaser",
                                  price="80",
@@ -49,10 +51,11 @@ class productDAO:
                                  image_url="/static/images/Spock_Poster.png")]
 
 
-
+# returns all products
     def getAllProducts(self):
         return self.products
 
+# loops through products and returns product that matches the ID arg
     def getProductById(self, productID):
         for product in self.products:
             if product.productID == productID:

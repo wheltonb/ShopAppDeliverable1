@@ -1,4 +1,7 @@
 class Product:
+    # See below comments for each product types unique 3 attributes
+    # All product objects are initialized with all product attributes to avoid later issues with inheritance
+    # when creating products they only are given the attributes relevant and the rest are defaulted to None
     def __init__(self, productID, productName, price, type, gender, movable, isMirror, character, hasColour, dimensions, material, scale, isLimited, description, image_url):
         self.productID = productID
         self.productName = productName

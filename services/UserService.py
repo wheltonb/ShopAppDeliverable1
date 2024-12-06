@@ -2,7 +2,6 @@ from dao import userDAO
 from validation import userValidation
 from models import User
 # Creating a service layer for the model class this will handle business logic related to model
-# this is an example of MVC (Model View Controller) Good programming practice for website development
 
 from dao.userDAO import UserDAO
 from models.User import User
@@ -21,8 +20,9 @@ class UserService:
         return None
 
 
-
-
+# below is code from a previously scrapped userValidation Module however this caused significant issues in the late
+# stages of project development, not removed as contains logic relating to signup so may be useful in later
+# iteration of the project
 """
     def __init__(self, userValidation):
         # Create an instance of UserDAO to handle model data
