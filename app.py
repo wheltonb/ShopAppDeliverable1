@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, flash
 from dao.productDAO import productDAO
 from services.UserService import UserService
 # imports are needed to drag elements of the project from custom DAO and Service modules as well as access pre-built flask libraries
@@ -142,8 +142,29 @@ def admin_page():
 
 @app.route('/cart', methods=['GET', 'POST'])
 def show_cart():
+    if request.method == 'POST':
+        if 'checkout' in request.form:
+            flash("Order Placed", category="success")
+            session.pop('cart')
+            session['session_user'] = 'Guest'
+            session.modified = True
+            return redirect(url_for('homepage'))
+
+
+
     cart = session.get('cart', [])
-    return render_template('cart.html', cart=cart)
+    cart_len = len(cart)
+    cart_quant = 0
+    for item in cart:
+        cart_quant += int(item['quantity'])
+
+    cart_cost = 0
+    for item in cart:
+        item_quant = int(item['quantity'])
+        item_cost = int(item['price'])
+        total_cost_per_item =  item_cost * item_quant
+        cart_cost += total_cost_per_item
+    return render_template('cart.html', cart=cart, cart_len=cart_len, cart_cost=cart_cost, cart_quant=cart_quant)
 
 
 
